@@ -79,7 +79,7 @@ const SimpleStorage = () => {
 	
 	return (
 		<div>
-		<h1> {"Medichain"} </h1>
+		<h1> {"MedicBlock"} </h1>
 		
 		<h4> {"Change Healthcare Data"} </h4>
 			<button onClick={connectWalletHandler}>{connButtonText}</button>
