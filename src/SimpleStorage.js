@@ -9,7 +9,7 @@ import background from './background.svg';
 
 const SimpleStorage = () => {
 
-	// deploy simple storage contract and paste deployed contract address here. This value is local ganache chain
+	// deploy simple storage contract and paste deployed contract address here. This was the local ganache chain, now it is polygon testnet address currently. Will change this to mainnet when launch
 	let contractAddress = '0xaA6cF3dd03A3854f3E98a9C5e2C84325a9491fc9';
 
 	const [errorMessage, setErrorMessage] = useState(null);
