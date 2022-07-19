@@ -1,6 +1,9 @@
 .App {
   text-align: center;
-}
+    background-image: url('./background.svg');
+  }
+
+
 
 .App-logo {
   height: 40vmin;
@@ -35,4 +38,5 @@
   to {
     transform: rotate(360deg);
   }
+  
 }
