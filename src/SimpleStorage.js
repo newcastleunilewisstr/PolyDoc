@@ -3,6 +3,7 @@
 import React, {useState} from 'react'
 import {ethers} from 'ethers'
 import SimpleStorage_abi from './contracts/SimpleStorage_abi.json'
+import logo from './logo.svg';
 
 const SimpleStorage = () => {
 
@@ -81,8 +82,7 @@ const SimpleStorage = () => {
 		<div>
 		<h1> {"MedicBlock"} </h1>
 
-		<img src="public\Images\medicine-g636746ba2_1280.png" alt="LogoPlaceholder"></img> 
-		
+		<img src={logo} alt=""></img>
 		
 		<h4> {"Change Healthcare Data"} </h4>
 			<button onClick={connectWalletHandler}>{connButtonText}</button>
