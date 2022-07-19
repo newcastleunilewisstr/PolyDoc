@@ -80,6 +80,9 @@ const SimpleStorage = () => {
 	return (
 		<div>
 		<h1> {"MedicBlock"} </h1>
+
+		<img src="public\Images\medicine-g636746ba2_1280.png" alt="LogoPlaceholder"></img> 
+		
 		
 		<h4> {"Change Healthcare Data"} </h4>
 			<button onClick={connectWalletHandler}>{connButtonText}</button>
