@@ -1,6 +1,7 @@
 .App {
   text-align: center;
     background-image: url('./background.svg');
+    background-size: 100%;
   }
 
 
@@ -24,7 +25,8 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: rgb(99, 213, 222);
+  
 }
 
 .App-link {

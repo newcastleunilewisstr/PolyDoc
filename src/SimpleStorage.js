@@ -4,11 +4,13 @@ import React, {useState} from 'react'
 import {ethers} from 'ethers'
 import SimpleStorage_abi from './contracts/SimpleStorage_abi.json'
 import logo from './logo.svg';
+import background from './background.svg';
+
 
 const SimpleStorage = () => {
 
 	// deploy simple storage contract and paste deployed contract address here. This value is local ganache chain
-	let contractAddress = '0x3d87c2e1a1bf7aB5748416845dc88c68f9C744bc';
+	let contractAddress = '0xaA6cF3dd03A3854f3E98a9C5e2C84325a9491fc9';
 
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [defaultAccount, setDefaultAccount] = useState(null);
@@ -79,6 +81,8 @@ const SimpleStorage = () => {
 	}
 	
 	return (
+		
+		
 		<div>
 		<h1> {"MedicBlock"} </h1>
 
