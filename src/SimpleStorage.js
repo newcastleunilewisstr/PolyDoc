@@ -5,6 +5,8 @@ import {ethers} from 'ethers'
 import SimpleStorage_abi from './contracts/SimpleStorage_abi.json'
 import logo from './logo.svg';
 import background from './background.svg';
+import {then} from 'react';
+
 
 
 const SimpleStorage = () => {
@@ -15,12 +17,46 @@ const SimpleStorage = () => {
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [defaultAccount, setDefaultAccount] = useState(null);
 	const [connButtonText, setConnButtonText] = useState('Connect Wallet');
+	const [adminSwitchText, setAdminSwitchText] = useState('Admin Portal');
 
 	const [currentContractVal, setCurrentContractVal] = useState(null);
 
 	const [provider, setProvider] = useState(null);
 	const [signer, setSigner] = useState(null);
 	const [contract, setContract] = useState(null);
+
+
+
+
+	
+
+
+	  const initialAdmins = [
+		{id: 1, name: 'Lewis', address: '0x54B7210ec53ADF5B30e6e7eA5C290DaDD062A172'},
+		
+	  ];
+	  const [Admins, setAdmins] = useState(initialAdmins);
+	
+const connectAdmin = () => {
+		if (defaultAccount==initialAdmins){
+
+			then(result => {
+				
+				setAdminSwitchText('Admin Verified');
+			})
+			.catch(error => {
+				setErrorMessage(error.message);
+			
+			});
+
+		} else {
+			console.log('Need to get Admin Approval');
+			setErrorMessage('If you are a user please use the user portal. If you require admin access please contact your manager to get approval for admin access');
+		}
+	}
+
+
+
 
 	const connectWalletHandler = () => {
 		if (window.ethereum && window.ethereum.isMetaMask) {
@@ -92,6 +128,9 @@ const SimpleStorage = () => {
 			<button onClick={connectWalletHandler}>{connButtonText}</button>
 			<div>
 				<h3>Address: {defaultAccount}</h3>
+			</div>
+			<div> 
+			<button onClick={setAdmins}>{adminSwitchText}</button>
 			</div>
 			<form onSubmit={setHandler}>
 				<input id="setText" type="text"/>
