@@ -4,12 +4,11 @@ import React, {useState} from 'react'
 import {ethers} from 'ethers'
 import SimpleStorage_abi from './contracts/SimpleStorage_abi.json'
 import logo from './logo.svg';
-import background from './background.svg';
 import {then} from 'react';
 
 
 
-const SimpleStorage = () => {
+const App = () => {
 
 	// deploy simple storage contract and paste deployed contract address here. This was the local ganache chain, now it is polygon testnet address currently. Will change this to mainnet when launch
 	let contractAddress = '0xaA6cF3dd03A3854f3E98a9C5e2C84325a9491fc9';
@@ -30,15 +29,16 @@ const SimpleStorage = () => {
 
 	
 
-
+	
 	  const initialAdmins = [
 		{id: 1, name: 'Lewis', address: '0x54B7210ec53ADF5B30e6e7eA5C290DaDD062A172'},
 		
 	  ];
-	  const [Admins, setAdmins] = useState(initialAdmins);
 	
-const connectAdmin = () => {
-		if (defaultAccount==initialAdmins){
+	const [admins] = useState(initialAdmins);
+	  const connectAdmins = () => {
+
+		if (defaultAccount===admins){
 
 			then(result => {
 				
@@ -53,7 +53,7 @@ const connectAdmin = () => {
 			console.log('Need to get Admin Approval');
 			setErrorMessage('If you are a user please use the user portal. If you require admin access please contact your manager to get approval for admin access');
 		}
-	}
+	  }
 
 
 
@@ -130,8 +130,18 @@ const connectAdmin = () => {
 				<h3>Address: {defaultAccount}</h3>
 			</div>
 			<div> 
-			<button onClick={setAdmins}>{adminSwitchText}</button>
+			<button onClick={connectAdmins}>{adminSwitchText}</button>
 			</div>
+			{/* {admins.map((admins) => {
+        return (
+          <div key={admins.address}>
+            <h2>{admins}</h2>
+          </div>
+        );
+      
+			})};
+   */}
+
 			<form onSubmit={setHandler}>
 				<input id="setText" type="text"/>
 				<button type={"submit"}> Update Contract </button>
@@ -145,4 +155,4 @@ const connectAdmin = () => {
 	);
 }
 
-export default SimpleStorage;
+export default App;
