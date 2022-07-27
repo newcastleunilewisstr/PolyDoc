@@ -1,12 +1,14 @@
 // https://docs.metamask.io/guide/ethereum-provider.html#using-the-provider
 
-import React, {useState} from 'react'
-import {ethers} from 'ethers'
+import React, { useState } from 'react'
+import { ethers } from 'ethers'
 import SimpleStorage_abi from './contracts/SimpleStorage_abi.json'
-import logo from './logo.svg';
-import {then} from 'react';
+import { Header } from './components/Header'
 
-
+const initialAdmins = [
+	{ id: 1, name: 'Lewis', address: '0x54B7210ec53ADF5B30e6e7eA5C290DaDD062A172' },
+	{ id: 2, name: 'Luke', address: '0x54B7210ec53ADF5B30e6e7eA5C2wefewfgqwgfqf90DaDD062A172' },
+];
 
 const App = () => {
 
@@ -14,62 +16,29 @@ const App = () => {
 	let contractAddress = '0xaA6cF3dd03A3854f3E98a9C5e2C84325a9491fc9';
 
 	const [errorMessage, setErrorMessage] = useState(null);
-	const [defaultAccount, setDefaultAccount] = useState(null);
+	// const [defaultAccount, setDefaultAccount] = useState(null);
 	const [connButtonText, setConnButtonText] = useState('Connect Wallet');
-	const [adminSwitchText, setAdminSwitchText] = useState('Admin Portal');
-
 	const [currentContractVal, setCurrentContractVal] = useState(null);
-
 	const [provider, setProvider] = useState(null);
 	const [signer, setSigner] = useState(null);
 	const [contract, setContract] = useState(null);
 
-
-
-
-	
-
-	
-	  const initialAdmins = [
-		{id: 1, name: 'Lewis', address: '0x54B7210ec53ADF5B30e6e7eA5C290DaDD062A172'},
-		
-	  ];
-	
-	const [admins] = useState(initialAdmins);
-	  const connectAdmins = () => {
-
-		if (defaultAccount===admins){
-
-			then(result => {
-				
-				setAdminSwitchText('Admin Verified');
-			})
-			.catch(error => {
-				setErrorMessage(error.message);
-			
-			});
-
-		} else {
-			console.log('Need to get Admin Approval');
-			setErrorMessage('If you are a user please use the user portal. If you require admin access please contact your manager to get approval for admin access');
-		}
-	  }
-
+	const [user, setUser] = useState(null)
 
 
 
 	const connectWalletHandler = () => {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 
-			window.ethereum.request({ method: 'eth_requestAccounts'})
-			.then(result => {
-				accountChangedHandler(result[0]);
-				setConnButtonText('Wallet Connected');
-			})
-			.catch(error => {
-				setErrorMessage(error.message);
-			
-			});
+			window.ethereum.request({ method: 'eth_requestAccounts' })
+				.then(result => {
+					accountChangedHandler(result[0]);
+					setConnButtonText('Wallet Connected');
+				})
+				.catch(error => {
+					setErrorMessage(error.message);
+
+				});
 
 		} else {
 			console.log('Need to install MetaMask');
@@ -79,7 +48,7 @@ const App = () => {
 
 	// update account, will cause component re-render
 	const accountChangedHandler = (newAccount) => {
-		setDefaultAccount(newAccount);
+		setUser({ address: newAccount });
 		updateEthers();
 	}
 
@@ -102,7 +71,7 @@ const App = () => {
 		setSigner(tempSigner);
 
 		let tempContract = new ethers.Contract(contractAddress, SimpleStorage_abi, tempSigner);
-		setContract(tempContract);	
+		setContract(tempContract);
 	}
 
 	const setHandler = (event) => {
@@ -115,39 +84,32 @@ const App = () => {
 		let val = await contract.get();
 		setCurrentContractVal(val);
 	}
-	
-	return (
-		
-		
-		<div>
-		<h1> {"MedicBlock"} </h1>
 
-		<img src={logo} alt=""></img>
-		
-		<h4> {"Change Healthcare Data"} </h4>
-			<button onClick={connectWalletHandler}>{connButtonText}</button>
-			<div>
-				<h3>Address: {defaultAccount}</h3>
-			</div>
-			<div> 
-			<button onClick={connectAdmins}>{adminSwitchText}</button>
-			</div>
-			{/* {admins.map((admins) => {
-        return (
-          <div key={admins.address}>
-            <h2>{admins}</h2>
-          </div>
-        );
-      
-			})};
-   */}
+
+
+	return (
+
+
+		<div>
+			<Wallet
+				user={user}
+				setUser={setUser}
+				connectWalletHandler={connectWalletHandler}
+				connButtonText={connButtonText} />
+			<Header />
+
+			{
+				user?.admin === true ?
+					<AdminComponent />
+					: null
+			}
 
 			<form onSubmit={setHandler}>
-				<input id="setText" type="text"/>
+				<input id="setText" type="text" />
 				<button type={"submit"}> Update Contract </button>
 			</form>
 			<div>
-			<button onClick={getCurrentVal} style={{marginTop: '5em'}}> Get Current Contract Value </button>
+				<button onClick={getCurrentVal} style={{ marginTop: '5em' }}> Get Current Contract Value </button>
 			</div>
 			{currentContractVal}
 			{errorMessage}
@@ -156,3 +118,45 @@ const App = () => {
 }
 
 export default App;
+
+
+const Wallet = ({ user, setUser, connectWalletHandler, connButtonText }) => {
+	const [adminSwitchText, setAdminSwitchText] = useState('Admin Portal');
+	const [admins] = useState(initialAdmins);
+	const [errorMessage, setErrorMessage] = useState(null);
+
+	const connectAdmins = () => {
+		console.log('current address', user?.address)
+		console.log('admins', admins)
+		const admin = admins.find(admin => admin.address.toUpperCase() === user?.address.toUpperCase())
+		console.log('admin', admin)
+		if (admin) {
+			setUser({ ...user, admin: true })
+			setAdminSwitchText('Admin Verified');
+			setErrorMessage(null);
+			// window.location.assign('https://www.google.co.uk')
+		} else {
+			console.log('Need to get Admin Approval');
+			setErrorMessage('If you are a user please use the user portal. If you require admin access please contact your manager to get approval for admin access');
+		}
+	}
+
+	return <div style={{ width: '100%' }}>
+		<div style={{ display: 'flex', justifyContent: 'end' }}>
+			<button style={{ pading: '5px', background: 'none', border: '2px solid black', borderRadius: '5px', margin: '10px' }} onClick={connectWalletHandler}>{connButtonText}</button>
+			<button style={{ pading: '5px', background: 'none', border: '2px solid black', borderRadius: '5px', margin: '10px' }} onClick={connectAdmins}>{adminSwitchText}</button>
+		</div>
+		<div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+			<h3 style={{ margin: 0 }}>Address</h3><div>{user?.address}</div>
+			{errorMessage}
+		</div>
+	</div>
+}
+
+const AdminComponent = () => {
+	return <div>Admin View 
+		{initialAdmins.map(admin => {
+			return <div>Admin: {admin.address} {admin.name}</div>
+		})}
+	</div>
+}
