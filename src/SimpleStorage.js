@@ -10,6 +10,7 @@ const initialAdmins = [
 	{ id: 2, name: 'Luke', address: '0x54B7210ec53ADF5B30e6e7eA5C2wefewfgqwgfqf90DaDD062A172' },
 ];
 
+
 const App = () => {
 
 	// deploy simple storage contract and paste deployed contract address here. This was the local ganache chain, now it is polygon testnet address currently. Will change this to mainnet when launch
@@ -22,8 +23,8 @@ const App = () => {
 	const [provider, setProvider] = useState(null);
 	const [signer, setSigner] = useState(null);
 	const [contract, setContract] = useState(null);
-
 	const [user, setUser] = useState(null)
+	
 
 
 
@@ -85,6 +86,38 @@ const App = () => {
 		setCurrentContractVal(val);
 	}
 
+	
+
+	const AdminComponent = () => {
+		
+		const [ViewAdmin, SetViewAdmin] = useState (false)
+
+
+		const GetAdminList = () => {
+			SetViewAdmin(true);
+		  };
+		
+		  return (
+			<div>
+			  <div>Admin View</div>
+			  <button onClick={GetAdminList}> View Admins </button>
+			  {ViewAdmin &&
+				initialAdmins.map((admin) => {
+				  return (
+					<div>
+					  Admin: {admin.name} {admin.address} {admin.id}
+					</div>
+				  );
+				})}
+			</div>
+		  );
+		};
+			
+
+		
+	
+	
+
 
 
 	return (
@@ -92,6 +125,8 @@ const App = () => {
 
 		<div>
 			<Wallet
+				
+			
 				user={user}
 				setUser={setUser}
 				connectWalletHandler={connectWalletHandler}
@@ -99,10 +134,19 @@ const App = () => {
 			<Header />
 
 			{
+				
 				user?.admin === true ?
 					<AdminComponent />
 					: null
 			}
+			
+			{/* {
+				
+			// 	user?.ViewAdmin === true ?
+			// 		<GetAdminList />
+			// 		: null 
+			// } */}
+			
 
 			<form onSubmit={setHandler}>
 				<input id="setText" type="text" />
@@ -117,13 +161,13 @@ const App = () => {
 	);
 }
 
-export default App;
 
 
 const Wallet = ({ user, setUser, connectWalletHandler, connButtonText }) => {
 	const [adminSwitchText, setAdminSwitchText] = useState('Admin Portal');
 	const [admins] = useState(initialAdmins);
 	const [errorMessage, setErrorMessage] = useState(null);
+	
 
 	const connectAdmins = () => {
 		console.log('current address', user?.address)
@@ -139,6 +183,8 @@ const Wallet = ({ user, setUser, connectWalletHandler, connButtonText }) => {
 			console.log('Need to get Admin Approval');
 			setErrorMessage('If you are a user please use the user portal. If you require admin access please contact your manager to get approval for admin access');
 		}
+
+	
 	}
 
 	return <div style={{ width: '100%' }}>
@@ -153,10 +199,10 @@ const Wallet = ({ user, setUser, connectWalletHandler, connButtonText }) => {
 	</div>
 }
 
-const AdminComponent = () => {
-	return <div>Admin View 
-		{initialAdmins.map(admin => {
-			return <div>Admin: {admin.address} {admin.name}</div>
-		})}
-	</div>
-}
+// const GetAdminList = () => initialAdmins.map(admin => {
+// 	return <div>Admin: {admin.name} {admin.address} {admin.id}</div>
+// })
+// }
+
+
+export default App
