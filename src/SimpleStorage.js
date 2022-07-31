@@ -4,6 +4,10 @@ import React, { useState } from 'react'
 import { ethers } from 'ethers'
 import SimpleStorage_abi from './contracts/SimpleStorage_abi.json'
 import { Header } from './components/Header'
+import fleekstorage from '@fleekhq/fleek-atorage-js'
+
+
+
 
 const initialAdmins = [
 	{ id: 1, name: 'Lewis', address: '0x54B7210ec53ADF5B30e6e7eA5C290DaDD062A172' },
