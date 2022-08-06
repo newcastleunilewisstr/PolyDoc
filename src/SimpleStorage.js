@@ -1,10 +1,18 @@
 // https://docs.metamask.io/guide/ethereum-provider.html#using-the-provider
 
+import { create } from 'ipfs-core'
 import React, { useState } from 'react'
 import { ethers } from 'ethers'
 import SimpleStorage_abi from './contracts/SimpleStorage_abi.json'
 import { Header } from './components/Header'
-import fleekstorage from '@fleekhq/fleek-atorage-js'
+
+//import { create, CID, IPFSHTTPClient } from "ipfs-http-client";
+
+
+//const ipfs =await create()
+
+//const ipfsClient = require('ipfs-http-client');
+//const ipfs = ipfsClient ({ host: 'ipfs.infura.io', port: '5001', protocol: 'https'})
 
 
 
@@ -16,6 +24,7 @@ const initialAdmins = [
 
 
 const App = () => {
+
 
 	// deploy simple storage contract and paste deployed contract address here. This was the local ganache chain, now it is polygon testnet address currently. Will change this to mainnet when launch
 	let contractAddress = '0xaA6cF3dd03A3854f3E98a9C5e2C84325a9491fc9';
@@ -79,11 +88,19 @@ const App = () => {
 		setContract(tempContract);
 	}
 
-	const setHandler = (event) => {
+	setHandler = async (event) => {
 		event.preventDefault();
+		const ipfs =await create()
 		console.log('sending ' + event.target.setText.value + ' to the contract');
-		contract.set(event.target.setText.value);
-	}
+		const {cid} = await ipfs.add('setText')
+		//const storedData = file[0]['hash']
+		this.state.contract.methods.set(cid).send({from: this.state.account}).then((r)=>{
+			this.setState({storedData: cid})
+			contract.set(event.target.storedData.value);
+		})
+	
+}
+
 
 	const getCurrentVal = async () => {
 		let val = await contract.get();
@@ -119,9 +136,6 @@ const App = () => {
 			
 
 		
-	
-	
-
 
 
 	return (
@@ -144,12 +158,7 @@ const App = () => {
 					: null
 			}
 			
-			{/* {
-				
-			// 	user?.ViewAdmin === true ?
-			// 		<GetAdminList />
-			// 		: null 
-			// } */}
+			
 			
 
 			<form onSubmit={setHandler}>
@@ -203,10 +212,6 @@ const Wallet = ({ user, setUser, connectWalletHandler, connButtonText }) => {
 	</div>
 }
 
-// const GetAdminList = () => initialAdmins.map(admin => {
-// 	return <div>Admin: {admin.name} {admin.address} {admin.id}</div>
-// })
-// }
 
 
 export default App

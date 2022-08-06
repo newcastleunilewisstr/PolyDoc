@@ -4,18 +4,15 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@fleekhq/fleek-storage-js": "^1.0.22",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "ethers": "^5.5.1",
-    "node.js": "^0.0.1-security",
+    "ipfs-core": "^0.15.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
-    "stack": "^0.1.0",
-    "web-vitals": "^1.1.2",
-    "yarn": "^1.22.19"
+    "web-vitals": "^1.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
