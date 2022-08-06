@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { ethers } from 'ethers'
 import SimpleStorage_abi from './contracts/SimpleStorage_abi.json'
 import { Header } from './components/Header'
-import fleekstorage from '@fleekhq/fleek-atorage-js'
 
 
 
