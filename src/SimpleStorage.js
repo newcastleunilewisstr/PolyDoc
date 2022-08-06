@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 import { ethers } from 'ethers'
 import SimpleStorage_abi from './contracts/SimpleStorage_abi.json'
 import { Header } from './components/Header'
-
+//import { create } from 'ipfs-core'
+import {ipfsbcupload} from './ipfs'
 
 
 
@@ -78,10 +79,11 @@ const App = () => {
 		setContract(tempContract);
 	}
 
-	const setHandler = (event) => {
+	const setHandler =  async (event) => {
 		event.preventDefault();
+		const Hash = await ipfsbcupload (event.target.setText.value)
 		console.log('sending ' + event.target.setText.value + ' to the contract');
-		contract.set(event.target.setText.value);
+		contract.set(Hash);
 	}
 
 	const getCurrentVal = async () => {
