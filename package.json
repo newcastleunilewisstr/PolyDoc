@@ -20,6 +20,7 @@
     "console-stamp": "^3.0.6",
     "curl": "^0.1.4",
     "dns.js": "^1.0.1",
+    "dotenv": "^16.0.1",
     "ethers": "^5.5.1",
     "events": "^1.0.0",
     "https-browserify": "~0.0.0",

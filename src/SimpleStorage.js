@@ -7,9 +7,8 @@ import Code_abi from "./contracts/Code_abi.json";
 import { Header } from "./components/Header";
 import { ipfsbcupload } from "./ipfs";
 
-
-
-
+// Initial admins are defined in app here for convenience, in the deployed version these values should be stored
+// and encrypted, once encrypted they can be stored on a decentralized database.
 
 const initialAdmins = [
   {
@@ -29,8 +28,8 @@ const App = () => {
   let phonecontractAddress = "0xaA6cF3dd03A3854f3E98a9C5e2C84325a9491fc9";
   let codecontractAddress = "0xce1C7082ED63083e546e4B370ce707603f3DE464";
 
+  // Various variables and usestates
   const [errorMessage, setErrorMessage] = useState(null);
-  // const [defaultAccount, setDefaultAccount] = useState(null);
   const [connButtonText, setConnButtonText] = useState("Connect Wallet");
   const [currentContractValReg, setCurrentContractValReg] = useState(null);
   const [currentContractValAuth, setCurrentContractValAuth] = useState(null);
@@ -38,9 +37,11 @@ const App = () => {
   const [signer, setSigner] = useState(null);
   const [contract, setContract] = useState(null);
   const [user, setUser] = useState(null);
-  const [phoneNum, setPhoneNum] = useState(null)
-  const [code, setCode] = useState(null)
-  const [Reg, setReg] = useState(null)
+  const [phoneNum, setPhoneNum] = useState(null);
+  const [code, setCode] = useState(null);
+  const [Reg, setReg] = useState(null);
+
+  //connect wallet
 
   const connectWalletHandler = () => {
     if (window.ethereum && window.ethereum.isMetaMask) {
@@ -81,68 +82,52 @@ const App = () => {
 
     let tempSigner = tempProvider.getSigner();
     setSigner(tempSigner);
-    
 
-    
-    if (Reg == null) {let tempContract = new ethers.Contract(
-      phonecontractAddress, 
-      Register_abi,
-      tempSigner)
-      setContract(tempContract)
+    // Usestates to use secondary smart contract when first has been pressed.
+
+    if (Reg == null) {
+      let tempContract = new ethers.Contract(
+        phonecontractAddress,
+        Register_abi,
+        tempSigner
+      );
+      setContract(tempContract);
+    } else if (Reg !== null) {
+      let tempContract = new ethers.Contract(
+        codecontractAddress,
+        Code_abi,
+        tempSigner
+      );
+      setContract(tempContract);
     }
-  
-      else if (Reg !== null) {let
-      tempContract = new ethers.Contract(
-      codecontractAddress, 
-      Code_abi,
-      tempSigner)
-    setContract(tempContract)
-      }
-  }
-  
-  
- 
-  
-
-  
-
-
-
-
-
+  };
 
   const setRegister = async (event) => {
     event.preventDefault();
     const Hash = await ipfsbcupload(event.target.setText.value);
     console.log("sending " + event.target.setText.value + " to the contract");
     contract.set(Hash);
-    setPhoneNum(event.target.setText.value)
-    setReg(100)
+    setPhoneNum(event.target.setText.value);
+    setReg(100);
   };
-  
-
 
   const setAuth = async (event) => {
     event.preventDefault();
     const Hash = await ipfsbcupload(event.target.setText.value);
     console.log("sending " + event.target.setText.value + " to the contract");
     contract.set(Hash);
-    setCode(event.target.setText.value)
-
-  }
-
-  
+    setCode(event.target.setText.value);
+  };
 
   const getCurrentValReg = async () => {
     let val = await contract.get();
     setCurrentContractValReg(val);
-  }
+  };
 
   const getCurrentValCode = async () => {
     let val = await contract.get();
     setCurrentContractValAuth(val);
-  }
-
+  };
 
   const AdminComponent = () => {
     const [ViewAdmin, SetViewAdmin] = useState(false);
@@ -154,24 +139,25 @@ const App = () => {
     return (
       <div>
         <div>Admin View</div>
-        
+
         <button onClick={getCurrentValReg} style={{ marginTop: "5em" }}>
           {" "}
           View IPFS hash of Registration phone number{" "}
-        </button> 
+        </button>
         {currentContractValReg}
-      {errorMessage}
+        {errorMessage}
 
-      <div> <button onClick={getCurrentValCode} style={{ marginTop: "5em" }}>
+        <div>
           {" "}
-          View IPFS hash of verification code{" "}
-        </button> 
-        {currentContractValAuth}
-      {errorMessage}
+          <button onClick={getCurrentValCode} style={{ marginTop: "5em" }}>
+            {" "}
+            View IPFS hash of verification code{" "}
+          </button>
+          {currentContractValAuth}
+          {errorMessage}
+        </div>
 
-      </div>
-
-<div></div>
+        <div></div>
         <button onClick={GetAdminList}> View Admins </button>
         {ViewAdmin &&
           initialAdmins.map((admin) => {
@@ -179,7 +165,6 @@ const App = () => {
               <div>
                 Admin: {admin.name} {admin.address} {admin.id}
               </div>
-              
             );
           })}
       </div>
@@ -198,60 +183,23 @@ const App = () => {
 
       {user?.admin === true ? <AdminComponent /> : null}
 
-
-  
       <form onSubmit={setRegister}>
         <input id="setText" type="text" pattern="[0-9]{11}" />
         <button type={"submit"}> Submit </button>
       </form>
 
- 
-
-{/* function handleChange(e) {
-  setPhoneNum(e.target.value);
-}
-
-
-function handleSubmit(e) {
-  e.preventDefault();
-  console.log(phoneNum);
-}
-
-
-return (
-  <form onSubmit={handleSubmit}>
-    <input
-      pattern="[0-9]{10}"
-      placeholder="Add a phone number"
-      onChange={handleChange}
-      required
-    />
-    <button type="submit">Submit</button>
-  </form>
-); */}
-
-{
-  phoneNum !== null?
-  <div>
-      <h4>Enter the code from your phone</h4>
-      <form onSubmit={setAuth}>
-      <input id="setText" type="text" />
-      <button type={"submit"}> Submit 2FA Code </button>
-    </form></div>
-    :null
-    }
-    
-  
-     
+      {phoneNum !== null ? (
+        <div>
+          <h4>Enter the code from your phone</h4>
+          <form onSubmit={setAuth}>
+            <input id="setText" type="text" />
+            <button type={"submit"}> Submit 2FA Code </button>
+          </form>
+        </div>
+      ) : null}
     </div>
   );
 };
-
-
-
-
-
-
 
 const Wallet = ({ user, setUser, connectWalletHandler, connButtonText }) => {
   const [adminSwitchText, setAdminSwitchText] = useState("Admin Portal");
