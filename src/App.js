@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import SimpleStorage from './SimpleStorage';
+import Polydoc from './Polydoc';
 
 function App() {
   return (
     <div className="App">
-      <SimpleStorage/>
+      <Polydoc/>
     </div>
   );
 }

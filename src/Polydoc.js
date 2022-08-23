@@ -24,7 +24,7 @@ const initialAdmins = [
 ];
 
 const App = () => {
-  // deploy simple storage contract and paste deployed contract address here. This was the local ganache chain, now it is polygon mainnet
+  // deploy contractsThis was the local ganache chain, now it is polygon mainnet
   let phonecontractAddress = "0xaA6cF3dd03A3854f3E98a9C5e2C84325a9491fc9";
   let codecontractAddress = "0xce1C7082ED63083e546e4B370ce707603f3DE464";
 
